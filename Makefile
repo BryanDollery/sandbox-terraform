@@ -1,7 +1,5 @@
 .PHONY: tmp
 
-run: stop start exec
-
 up: fmt plan apply
 
 debug:
