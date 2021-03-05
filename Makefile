@@ -111,8 +111,6 @@ output.json:
 clean:
 	rm -f output.json
 	rm -f plan.out
-	rm -rf .terraform ssh
-	mkdir ssh
 
 copy: output.json
 	ssh -i ssh/id_rsa ubuntu@$$(cat output.json | jq '.sandbox_ip.value' | xargs) rm -f /home/ubuntu/.ssh/id_rsa
@@ -127,6 +125,8 @@ connect: output.json
 	ssh -i ssh/id_rsa ubuntu@$$(cat output.json | jq '.sandbox_ip.value' | xargs)
 
 init: clean
+	rm -rf .terraform ssh
+	mkdir ssh
 	ssh-keygen -t rsa -f ./ssh/id_rsa -q -N ""
 	time docker container run -it --rm \
 		   --env TF_NAMESPACE=$$TF_NAMESPACE \
