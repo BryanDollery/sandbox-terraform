@@ -1,4 +1,7 @@
-.PHONY: tmp
+.PHONY: output plan
+
+help:
+	echo "syntax: make <target>\nWhere target is: ver, debug, output, up, fmt, plan, apply, copy, ip, connect, init, test\n\nUses terraform to manage a simple sandbox"
 
 up: fmt plan apply
 
