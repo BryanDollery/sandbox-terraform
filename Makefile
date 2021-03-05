@@ -1,7 +1,7 @@
-.PHONY: output plan
+.PHONY: output plan clean
 
 help:
-	echo "syntax: make <target>\nWhere target is: ver, debug, output, up, fmt, plan, apply, copy, ip, connect, init, test\n\nUses terraform to manage a simple sandbox"
+	echo "syntax: make <target>\nWhere target is: ver, debug, clean, output, up, fmt, plan, apply, copy, ip, connect, init, test\n\nUses terraform to manage a simple sandbox"
 
 up: fmt plan apply
 
@@ -46,7 +46,7 @@ fmt:
 		   --entrypoint terraform \
 		   bryandollery/terraform-packer-aws-alpine:14 fmt -recursive
 
-plan:
+plan: clean
 	time docker container run -it --rm \
 		   --env TF_NAMESPACE=$$TF_NAMESPACE \
 		   --env AWS_PROFILE="labs" \
@@ -108,6 +108,12 @@ output.json:
 		   --entrypoint terraform \
 		   bryandollery/terraform-packer-aws-alpine:14 output -json > output.json
 
+clean:
+	rm -f output.json
+	rm -f plan.out
+	rm -rf .terraform ssh
+	mkdir ssh
+
 copy: output.json
 	ssh -i ssh/id_rsa ubuntu@$$(cat output.json | jq '.sandbox_ip.value' | xargs) rm -f /home/ubuntu/.ssh/id_rsa
 	scp -i ssh/id_rsa ssh/id_rsa ubuntu@$$(cat output.json | jq '.sandbox_ip.value' | xargs):/home/ubuntu/.ssh/
@@ -120,9 +126,7 @@ ip:
 connect: output.json
 	ssh -i ssh/id_rsa ubuntu@$$(cat output.json | jq '.sandbox_ip.value' | xargs)
 
-init:
-	rm -rf .terraform ssh
-	mkdir ssh
+init: clean
 	ssh-keygen -t rsa -f ./ssh/id_rsa -q -N ""
 	time docker container run -it --rm \
 		   --env TF_NAMESPACE=$$TF_NAMESPACE \
