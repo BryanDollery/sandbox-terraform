@@ -11,6 +11,6 @@ module "dev" {
   public_key_path  = var.public_key_path
   private_key_path = var.private_key_path
   instance_type    = var.instance_type
-  aws_region           = var.region
+  aws_region       = var.region
 }
 

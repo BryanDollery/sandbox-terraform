@@ -81,7 +81,7 @@ down:
 		   -v $$PWD:/$$(basename $$PWD) \
 		   -v $$PWD/creds:/.aws \
 		   --hostname "$$(basename $$PWD)" \
-		   --name "$$(basename $$PWD)_apply" \
+		   --name "$$(basename $$PWD)_down" \
 		   -w /$$(basename $$PWD) \
 		   -u $$(id -u):$$(id -g) \
 		   --entrypoint terraform \
@@ -99,7 +99,7 @@ output.json:
 		   -v $$PWD:/$$(basename $$PWD) \
 		   -v $$PWD/creds:/.aws \
 		   --hostname "$$(basename $$PWD)" \
-		   --name "$$(basename $$PWD)_apply" \
+		   --name "$$(basename $$PWD)_output" \
 		   -w /$$(basename $$PWD) \
 		   -u $$(id -u):$$(id -g) \
 		   --entrypoint terraform \
@@ -128,7 +128,7 @@ init:
 		   -v $$PWD:/$$(basename $$PWD) \
 		   -v $$PWD/creds:/.aws \
 		   --hostname "$$(basename $$PWD)" \
-		   --name "$$(basename $$PWD)_apply" \
+		   --name "$$(basename $$PWD)_init" \
 		   -w /$$(basename $$PWD) \
 		   -u $$(id -u):$$(id -g) \
 		   --entrypoint terraform \
