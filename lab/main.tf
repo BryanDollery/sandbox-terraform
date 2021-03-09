@@ -40,6 +40,33 @@ resource "aws_subnet" "sandbox" {
   tags                    = module.tags_labs.tags
 }
 
+variable "ing" {
+  type = list(any)
+  default = [
+    { from = 80, to = 80 },
+    { from = 8080, to = 8080 },
+    { from = 443, to = 443 },
+    { from = 22, to = 22 },
+    { from = 9000, to = 9050 },
+    { from = 9450, to = 9450 },
+    { from = 30000, to = 32767 }
+  ]
+}
+
+resource "aws_security_group" "sandbox" {
+  vpc_id = aws_vpc.k8s_lab.id
+  tags   = module.tags_labs.tags
+  dynamic "ingress" {
+    for_each = var.ing
+    content {
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = ingress.value.from
+      to_port     = ingress.value.to
+    }
+  }
+}
+
 resource "aws_security_group" "sandbox" {
   vpc_id = aws_vpc.k8s_lab.id
   tags   = module.tags_labs.tags
